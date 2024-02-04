@@ -1,18 +1,150 @@
+import React, { useEffect, useState } from "react";
 import { FaCarSide } from "react-icons/fa";
 import { FaUserShield } from "react-icons/fa6";
 import { GrTransaction } from "react-icons/gr";
 import { IoCallSharp } from "react-icons/io5";
 import { Tabs } from "flowbite-react";
 import { FaStar } from "react-icons/fa";
-
-// import required modules
-// import { Autoplay, Pagination, Navigation } from "swiper/modules";
-// import {Swiper ,SwiperSlide} from "swiper";
+import toast, { Toaster } from "react-hot-toast";
 
 export function HomePage() {
+  const [alldata, setAlldata] = useState([]);
+
+  useEffect(() => {
+    fetch("https://fruitables-api.onrender.com/product/list/")
+      .then((res) => res.json())
+      .then((data) => setAlldata(data));
+  }, []);
+  // console.log(alldata);
+
+  const [apple, setApple] = useState([]);
+
+  useEffect(() => {
+    fetch("https://fruitables-api.onrender.com/product/list/")
+      .then((res) => res.json())
+      .then((data) => setApple(data.filter((e) => e.title == "Oranges")));
+  }, []);
+
+  const [banana, setBanana] = useState([]);
+
+  useEffect(() => {
+    fetch("https://fruitables-api.onrender.com/product/list/")
+      .then((res) => res.json())
+      .then((data) =>
+        setBanana(data.filter((e) => e.title.toLowerCase().includes("banana")))
+      );
+  }, []);
+
+  const [apricots, setApricots] = useState([]);
+  useEffect(() => {
+    fetch("https://fruitables-api.onrender.com/product/list/")
+      .then((res) => res.json())
+      .then((data) =>
+        setApricots(
+          data.filter((e) => e.title.toLowerCase().includes("apricots"))
+        )
+      );
+  }, []);
+
+  const [raspberries, setRaspberries] = useState([]);
+  useEffect(() => {
+    fetch("https://fruitables-api.onrender.com/product/list/")
+      .then((res) => res.json())
+      .then((data) =>
+        setRaspberries(
+          data.filter((e) => e.title.toLowerCase().includes("raspberries"))
+        )
+      );
+  }, []);
+
+  const [rating, setRating] = useState([]);
+
+  useEffect(() => {
+    // Fetch both sets of data
+    Promise.all([
+      fetch("https://fruitables-api.onrender.com/product/rating/").then((res) =>
+        res.json()
+      ),
+      fetch("https://fruitables-api.onrender.com/product/list/").then((res) =>
+        res.json()
+      ),
+    ])
+      .then(([ratingData, productListData]) => {
+        // Use ratingData to filter productListData
+        const filteredData = productListData.filter((item) =>
+          ratingData.some((ratingItem) => ratingItem.product === item.id)
+        );
+        setRating(filteredData);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  const [ratings, setRatings] = useState([]);
+
+  useEffect(() => {
+    // Fetch rating data
+    fetch("https://fruitables-api.onrender.com/product/rating")
+      .then((res) => res.json())
+      .then((data) => {
+        // Set the fetched ratings data
+        setRatings(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching rating data:", error);
+      });
+  }, []);
+
+  // console.log(ratings);
+
+  // Fetch alldata separately
+  const [alldatas, setAlldatas] = useState([]);
+
+  useEffect(() => {
+    // Fetch alldata
+    fetch("https://fruitables-api.onrender.com/product/list/")
+      .then((res) => res.json())
+      .then((data) => {
+        // Set the fetched alldata
+        setAlldatas(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching alldata:", error);
+      });
+  }, []);
+
+  // Filter alldata based on ratings
+  const filteredData = alldatas.filter((item) => {
+    // Check if any rating matches the product id in alldata
+    return ratings.some((ratingItem) => ratingItem.product === item.id);
+  });
+
+  // console.log(filteredData);
+
+  const handleaddtocart = (id) => {
+    // Retrieve the cart items from localStorage
+    const cartItems = JSON.parse(localStorage.getItem("product")) || [];
+
+    // Check if the item is already in the cart
+    const isItemInCart = cartItems.includes(id);
+
+    if (isItemInCart) {
+      toast.error("Item is already in the cart!");
+      return; // No need to add the item again
+    }
+    // Add the new item to the cart
+    cartItems.push(id);
+    // Update the cart in localStorage
+    localStorage.setItem("product", JSON.stringify(cartItems));
+
+    toast.success("Item added to the cart successfully!");
+  };
+
   return (
     <>
       <div className="w-10/12 mx-auto">
+        <Toaster position="top-center" reverseOrder={false} />
         {/* hero section  */}
         <div className=" grid grid-cols-2 my-20">
           <div>
@@ -93,338 +225,154 @@ export function HomePage() {
           <Tabs aria-label="Default tabs">
             <Tabs.Item active title="All Products">
               <div className="grid grid-cols-4 gap-y-4 gap-x-2">
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
+                {alldata?.map((i) => (
+                  <div
+                    key={i.id}
+                    className="bg-gray-50 rounded-md overflow-hidden"
+                  >
+                    <img src={i.image} alt="" />
+                    <div className="p-3">
+                      <h2 className="text-center text-2xl font-semibold">
+                        {i.title}
+                      </h2>
+                      <p className="text-center my-2 text-gray-400">
+                        {i.description.slice(0, 80)}
+                      </p>
+                      <h3 className="text-xl font-semibold">${i.price} /kg</h3>
+                      <button
+                        onClick={() => handleaddtocart(i.id)}
+                        className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2"
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
+                ))}
               </div>
             </Tabs.Item>
 
-            <Tabs.Item title="Vegetables">
+            <Tabs.Item title="Apple">
               <div className="grid grid-cols-4 gap-y-4 gap-x-2">
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
+                {apple?.map((i) => (
+                  <div className="border-2 border-rose-600 rounded-md overflow-hidden">
+                    <img src={i.image} alt="" />
+                    <div className="p-3">
+                      <h2 className="text-center text-2xl font-semibold">
+                        {i.title}
+                      </h2>
+                      <p className="text-center my-2 text-gray-400">
+                        {i.description.slice(0, 80)}
+                      </p>
+                      <h3 className="text-xl font-semibold">$4.99 / kg</h3>
+                      <button
+                        onClick={handleaddtocart}
+                        className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2"
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
                   </div>
-                </div>
-
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
+                ))}
               </div>
             </Tabs.Item>
 
-            <Tabs.Item title="Fruits">
+            <Tabs.Item title="Banana">
               <div className="grid grid-cols-4 gap-y-4 gap-x-2">
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
+                {banana?.map((i) => (
+                  <div className="border-2 border-rose-600 rounded-md overflow-hidden">
+                    <img src={i.image} alt="" />
+                    <div className="p-3">
+                      <h2 className="text-center text-2xl font-semibold">
+                        {i.title}
+                      </h2>
+                      <p className="text-center my-2 text-gray-400">
+                        {i.description.slice(0, 80)}
+                      </p>
+                      <h3 className="text-xl font-semibold">$4.99 / kg</h3>
+                      <button
+                        onClick={handleaddtocart}
+                        className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2"
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
                   </div>
-                </div>
-
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
+                ))}
               </div>
             </Tabs.Item>
 
-            <Tabs.Item title="Bread">
+            <Tabs.Item title="Apricots">
               <div className="grid grid-cols-4 gap-y-4 gap-x-2">
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
+                {apricots?.map((i) => (
+                  <div className="border-2 border-rose-600 rounded-md overflow-hidden">
+                    <img src={i.image} alt="" />
+                    <div className="p-3">
+                      <h2 className="text-center text-2xl font-semibold">
+                        {i.title}
+                      </h2>
+                      <p className="text-center my-2 text-gray-400">
+                        {i.description.slice(0, 80)}
+                      </p>
+                      <h3 className="text-xl font-semibold">$4.99 / kg</h3>
+                      <button
+                        onClick={handleaddtocart}
+                        className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2"
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
                   </div>
-                </div>
-
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
+                ))}
               </div>
             </Tabs.Item>
 
-            <Tabs.Item title="Meat">
+            <Tabs.Item title="Raspberries">
               <div className="grid grid-cols-4 gap-y-4 gap-x-2">
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
+                {apricots?.map((i) => (
+                  <div className="border-2 border-rose-600 rounded-md overflow-hidden">
+                    <img src={i.image} alt="" />
+                    <div className="p-3">
+                      <h2 className="text-center text-2xl font-semibold">
+                        {i.title}
+                      </h2>
+                      <p className="text-center my-2 text-gray-400">
+                        {i.description.slice(0, 80)}
+                      </p>
+                      <h3 className="text-xl font-semibold">$4.99 / kg</h3>
+                      <button
+                        onClick={handleaddtocart}
+                        className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2"
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
                   </div>
-                </div>
+                ))}
+              </div>
+            </Tabs.Item>
 
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
+            <Tabs.Item title="Raspberries">
+              <div className="grid grid-cols-4 gap-y-4 gap-x-2">
+                {raspberries?.map((i) => (
+                  <div className="border-2 border-rose-600 rounded-md overflow-hidden">
+                    <img src={i.image} alt="" />
+                    <div className="p-3">
+                      <h2 className="text-center text-2xl font-semibold">
+                        {i.title}
+                      </h2>
+                      <p className="text-center my-2 text-gray-400">
+                        {i.description.slice(0, 80)}
+                      </p>
+                      <h3 className="text-xl font-semibold">$4.99 / kg</h3>
+                      <button
+                        onClick={handleaddtocart}
+                        className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2"
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                  <img
-                    src="https://themewagon.github.io/fruitables/img/fruite-item-5.jpg"
-                    alt=""
-                  />
-                  <div className="p-3">
-                    <h2 className="text-center text-2xl font-semibold">
-                      Grapes
-                    </h2>
-                    <p className="text-center my-2 text-gray-400">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit
-                      sed do eiusmod te incididunt
-                    </p>
-                    <h3 className="text-xl font-semibold">$4.99 / kg</h3>
-                    <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2">
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
+                ))}
               </div>
             </Tabs.Item>
           </Tabs>
@@ -448,10 +396,10 @@ export function HomePage() {
           </div>
           <div className="border-2 border-rose-600 rounded relative">
             <img
-              src="https://themewagon.github.io/fruitables/img/featur-3.jpg"
+              src="https://themewagon.github.io/fruitables/img/featur-1.jpg"
               alt=""
             />
-            <div className="absolute -bottom-10 left-14 w-8/12 h-24 flex items-center px-2 rounded-md justify-center bg-blue-600">
+            <div className="absolute -bottom-10 left-14 w-8/12 h-24 flex items-center px-2 rounded-md justify-center bg-red-600">
               <div>
                 <h2 className="text-white">Fresh Apples</h2>
                 <h3 className="text-white font-bold text-2xl text-center">
@@ -462,10 +410,10 @@ export function HomePage() {
           </div>
           <div className="border-2 border-rose-600 rounded relative">
             <img
-              src="https://themewagon.github.io/fruitables/img/featur-2.jpg"
+              src="https://themewagon.github.io/fruitables/img/featur-1.jpg"
               alt=""
             />
-            <div className="absolute -bottom-10 left-14 w-8/12 h-24 flex items-center px-2 rounded-md justify-center bg-green-600">
+            <div className="absolute -bottom-10 left-14 w-8/12 h-24 flex items-center px-2 rounded-md justify-center bg-red-600">
               <div>
                 <h2 className="text-white">Fresh Apples</h2>
                 <h3 className="text-white font-bold text-2xl text-center">
@@ -486,94 +434,32 @@ export function HomePage() {
           </div>
 
           <div className="my-10 grid grid-cols-4 gap-3">
-            <div>
-              <img
-                className="rounded-lg mb-4"
-                src="https://themewagon.github.io/fruitables/img/fruite-item-1.jpg"
-                alt=""
-              />
-              <h2 className="text-center my-2 text-xl font-semibold">
-                Organic Tomato
-              </h2>
-              <div className="flex justify-center">
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-gray-500 text-xl" />
+            {rating?.map((e) => (
+              <div>
+                <img className="rounded-lg mb-4" src={e.image} alt="" />
+                <h2 className="text-center my-2 text-xl font-semibold">
+                  {e.title}
+                </h2>
+                <div className="flex justify-center">
+                  <FaStar className="text-orange-500 text-xl" />
+                  <FaStar className="text-orange-500 text-xl" />
+                  <FaStar className="text-orange-500 text-xl" />
+                  <FaStar className="text-orange-500 text-xl" />
+                  <FaStar className="text-gray-500 text-xl" />
+                </div>
+                <h3 className="text-center my-2 text-xl font-semibold">
+                  {e.price}$
+                </h3>
+                <button
+                  onClick={handleaddtocart}
+                  className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2 block w-32 mx-auto"
+                >
+                  Add to Cart
+                </button>
               </div>
-              <h3 className="text-center my-2 text-xl font-semibold">3.12 $</h3>
-              <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2 block w-32 mx-auto">
-                Add to Cart
-              </button>
-            </div>
-            <div>
-              <img
-                className="rounded-lg mb-4"
-                src="https://themewagon.github.io/fruitables/img/fruite-item-2.jpg"
-                alt=""
-              />
-              <h2 className="text-center my-2 text-xl font-semibold">
-                Organic Tomato
-              </h2>
-              <div className="flex justify-center">
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-gray-500 text-xl" />
-              </div>
-              <h3 className="text-center my-2 text-xl font-semibold">3.12 $</h3>
-              <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2 block w-32 mx-auto">
-                Add to Cart
-              </button>
-            </div>
-            <div>
-              <img
-                className="rounded-lg mb-4"
-                src="https://themewagon.github.io/fruitables/img/fruite-item-3.jpg"
-                alt=""
-              />
-              <h2 className="text-center my-2 text-xl font-semibold">
-                Organic Tomato
-              </h2>
-              <div className="flex justify-center">
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-gray-500 text-xl" />
-              </div>
-              <h3 className="text-center my-2 text-xl font-semibold">3.12 $</h3>
-              <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2 block w-32 mx-auto">
-                Add to Cart
-              </button>
-            </div>
-            <div>
-              <img
-                className="rounded-lg mb-4"
-                src="https://themewagon.github.io/fruitables/img/fruite-item-4.jpg"
-                alt=""
-              />
-              <h2 className="text-center my-2 text-xl font-semibold">
-                Organic Tomato
-              </h2>
-              <div className="flex justify-center">
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-orange-500 text-xl" />
-                <FaStar className="text-gray-500 text-xl" />
-              </div>
-              <h3 className="text-center my-2 text-xl font-semibold">3.12 $</h3>
-              <button className="border-2 border-rose-500 rounded-full px-2 py-1 mt-2 block w-32 mx-auto">
-                Add to Cart
-              </button>
-            </div>
+            ))}
           </div>
         </div>
-
-    
       </div>
     </>
   );

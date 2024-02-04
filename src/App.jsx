@@ -6,7 +6,7 @@ import { Footer } from "./components/Footer";
 function App() {
   return (
     <>
-      <div className="border-b shadow-md ">
+      <div className="border-b shadow-md dark:bg-gray-600">
         <Nav></Nav>
       </div>
       <Outlet></Outlet>

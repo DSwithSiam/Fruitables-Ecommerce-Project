@@ -11,6 +11,9 @@ import { Shop } from './page/Shop.jsx';
 import { Contact } from './page/Contact.jsx';
 import { About } from './page/About.jsx';
 import { AddTocart } from './page/AddTocart.jsx';
+import { SignUp } from './page/SignUp.jsx';
+import { Login } from './page/Login.jsx';
+import { UserDeshborad } from './page/UserDeshborad.jsx';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +39,18 @@ const router = createBrowserRouter([
       {
         path: "/addtocart",
         element : <AddTocart></AddTocart>
+      },
+      {
+        path: "/signup",
+        element : <SignUp></SignUp>
+      },
+      {
+        path: "/login",
+        element : <Login></Login>
+      },
+      {
+        path: "/dashboard",
+        element : <UserDeshborad></UserDeshborad>
       }
     ]
   },
