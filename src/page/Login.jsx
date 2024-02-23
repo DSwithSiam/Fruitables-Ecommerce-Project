@@ -83,7 +83,7 @@ export function Login() {
             required
           />
         </div>
-        <Link className="text-blue-600 font-bold" to={"/register"}>
+        <Link className="text-blue-600 font-bold" to={"/signup"}>
           Have not a acount please Register !
         </Link>
         <Button type="submit">Submit</Button>

@@ -1,42 +1,38 @@
-import { Button, Checkbox, Label, TextInput, Textarea } from "flowbite-react";
+import { Button, Label, TextInput, Textarea } from "flowbite-react";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
 import { useEffect } from "react";
 
 export function Contact() {
-
   const handlePostContact = (e) => {
     e.preventDefault();
     const form = e.target;
     const name = e.target.name.value;
     const email = e.target.email.value;
     const message = e.target.message.value;
-    const constact = {name, email, message}
+    const contact = { name, email, message };
 
     fetch("https://fruitables-api.onrender.com/contact/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(constact),
+      body: JSON.stringify(contact),
     })
       .then((response) => response.json())
       .then((data) => console.log({ postId: data.id }));
-      
-      form.reset()
 
+    form.reset();
   };
 
   return (
     <>
       <div className="w-10/12 mx-auto my-20 bg-gray-200 p-4 rounded-lg">
-        <div className="grid grid-cols-2 gap-4 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
           <form onSubmit={handlePostContact} className="flex flex-col gap-4">
             <div>
-              <div className="mb-2 block">
-                <Label htmlFor="email1" value="Your Name" />
-              </div>
+              <Label htmlFor="name" value="Your Name" />
               <TextInput
-                id="email1"
+                id="name"
                 type="text"
                 name="name"
                 placeholder="Your Name"
@@ -44,11 +40,9 @@ export function Contact() {
               />
             </div>
             <div>
-              <div className="mb-2 block">
-                <Label htmlFor="email1" value="Your email" />
-              </div>
+              <Label htmlFor="email" value="Your Email" />
               <TextInput
-                id="email1"
+                id="email"
                 type="email"
                 name="email"
                 placeholder="name@flowbite.com"
@@ -56,40 +50,38 @@ export function Contact() {
               />
             </div>
             <div>
-              <div className="mb-2 block">
-                <Label htmlFor="email1" value="Your Message" />
-              </div>
+              <Label htmlFor="message" value="Your Message" />
               <Textarea
-                id="email1"
-                type="email"
+                id="message"
                 name="message"
                 placeholder="Message"
                 required
               />
             </div>
-
             <Button type="submit">Submit</Button>
           </form>
           <div>
-            <div className="flex gap-4 bg-gray-50 p-3 rounded-lg">
-              <FaLocationDot className="text-5xl text-rose-600" />
-              <div>
-                <h2 className="text-2xl font-semibold">Address</h2>
-                <p>123 Street New York.USA</p>
+            <div className="flex flex-col gap-4 bg-gray-50 p-3 rounded-lg">
+              <div className="flex items-center gap-4">
+                <FaLocationDot className="text-5xl text-rose-600" />
+                <div>
+                  <h2 className="text-2xl font-semibold">Address</h2>
+                  <p>123 Street New York. USA</p>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-4 my-4 bg-gray-50 p-3 rounded-lg">
-              <MdEmail className="text-5xl text-rose-600" />
-              <div>
-                <h2 className="text-2xl font-semibold">Mail Us</h2>
-                <p>info@example.com</p>
+              <div className="flex items-center gap-4">
+                <MdEmail className="text-5xl text-rose-600" />
+                <div>
+                  <h2 className="text-2xl font-semibold">Mail Us</h2>
+                  <p>info@example.com</p>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-4 bg-gray-50 p-3 rounded-lg">
-              <FaPhoneAlt className="text-5xl text-rose-600" />
-              <div>
-                <h2 className="text-2xl font-semibold">Telephone</h2>
-                <p>(+012) 3456 7890</p>
+              <div className="flex items-center gap-4">
+                <FaPhoneAlt className="text-5xl text-rose-600" />
+                <div>
+                  <h2 className="text-2xl font-semibold">Telephone</h2>
+                  <p>(+012) 3456 7890</p>
+                </div>
               </div>
             </div>
           </div>

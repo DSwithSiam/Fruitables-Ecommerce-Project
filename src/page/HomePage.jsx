@@ -146,12 +146,12 @@ export function HomePage() {
       <div className="w-10/12 mx-auto">
         <Toaster position="top-center" reverseOrder={false} />
         {/* hero section  */}
-        <div className=" grid grid-cols-2 my-20">
+        <div className=" sm:grid grid-cols-2 my-20">
           <div>
             <h3 className="text-rose-600 font-semibold text-xl ">
               100% Organic Foods
             </h3>
-            <h2 className="my-4 text-6xl leading-snug font-semibold">
+            <h2 className="my-4 sm:text-6xl text-3xl leading-snug font-semibold">
               Organic Veggies & Fruits Foods
             </h2>
             <label className="border-2 border-rose-600 overflow-hidden rounded-full">
@@ -176,7 +176,7 @@ export function HomePage() {
         {/* services home page  */}
         <div className="my-32">
           <div className="flex justify-between flex-wrap">
-            <div>
+            <div className="w-full bg-gray-100 p-4 rounded md:w-auto text-center mb-4 sm:mb-0">
               <div className="bg-rose-500 mx-auto w-20 h-20 flex justify-center items-center rounded-full relative">
                 <FaCarSide className="text-5xl rounded-full text-white" />
                 <span className="h-5 w-5 bg-rose-500 block absolute -bottom-2 rotate-45"></span>
@@ -187,7 +187,7 @@ export function HomePage() {
               <p className="text-gray-400">Free on order over $300</p>
             </div>
 
-            <div>
+            <div className="w-full bg-gray-100 p-4 rounded md:w-auto  text-center mb-4 sm:mb-0">
               <div className="bg-rose-500 mx-auto w-20 h-20 flex justify-center items-center rounded-full relative">
                 <FaUserShield className="text-5xl rounded-full text-white" />
                 <span className="h-5 w-5 bg-rose-500 block absolute -bottom-2 rotate-45"></span>
@@ -197,7 +197,7 @@ export function HomePage() {
               </h3>
               <p className="text-gray-400">Free on order over $300</p>
             </div>
-            <div>
+            <div className="w-full bg-gray-100 p-4 rounded md:w-auto  text-center mb-4 sm:mb-0">
               <div className="bg-rose-500 mx-auto w-20 h-20 flex justify-center items-center rounded-full relative">
                 <GrTransaction className="text-5xl rounded-full text-white" />
                 <span className="h-5 w-5 bg-rose-500 block absolute -bottom-2 rotate-45"></span>
@@ -207,7 +207,7 @@ export function HomePage() {
               </h3>
               <p className="text-gray-400">Free on order over $300</p>
             </div>
-            <div>
+            <div className="w-full bg-gray-100 p-4 rounded md:w-auto  text-center mb-4 sm:mb-0">
               <div className="bg-rose-500 mx-auto w-20 h-20 flex justify-center items-center rounded-full relative">
                 <IoCallSharp className="text-5xl rounded-full text-white" />
                 <span className="h-5 w-5 bg-rose-500 block absolute -bottom-2 rotate-45"></span>
@@ -224,13 +224,13 @@ export function HomePage() {
         <div className="my-20">
           <Tabs aria-label="Default tabs">
             <Tabs.Item active title="All Products">
-              <div className="grid grid-cols-4 gap-y-4 gap-x-2">
+              <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-2">
                 {alldata?.map((i) => (
                   <div
                     key={i.id}
                     className="bg-gray-50 rounded-md overflow-hidden"
                   >
-                    <img src={i.image} alt="" />
+                    <img className="h-48 w-full" src={i.image} alt="" />
                     <div className="p-3">
                       <h2 className="text-center text-2xl font-semibold">
                         {i.title}
@@ -252,10 +252,10 @@ export function HomePage() {
             </Tabs.Item>
 
             <Tabs.Item title="Apple">
-              <div className="grid grid-cols-4 gap-y-4 gap-x-2">
+            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-2">
                 {apple?.map((i) => (
                   <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                    <img src={i.image} alt="" />
+                    <img className="h-48 w-full" src={i.image} alt="" />
                     <div className="p-3">
                       <h2 className="text-center text-2xl font-semibold">
                         {i.title}
@@ -277,10 +277,10 @@ export function HomePage() {
             </Tabs.Item>
 
             <Tabs.Item title="Banana">
-              <div className="grid grid-cols-4 gap-y-4 gap-x-2">
+            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-2">
                 {banana?.map((i) => (
                   <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                    <img src={i.image} alt="" />
+                    <img className="h-48 w-full" src={i.image} alt="" />
                     <div className="p-3">
                       <h2 className="text-center text-2xl font-semibold">
                         {i.title}
@@ -302,10 +302,10 @@ export function HomePage() {
             </Tabs.Item>
 
             <Tabs.Item title="Apricots">
-              <div className="grid grid-cols-4 gap-y-4 gap-x-2">
+            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-2">
                 {apricots?.map((i) => (
                   <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                    <img src={i.image} alt="" />
+                    <img className="h-48 w-full" src={i.image} alt="" />
                     <div className="p-3">
                       <h2 className="text-center text-2xl font-semibold">
                         {i.title}
@@ -327,10 +327,10 @@ export function HomePage() {
             </Tabs.Item>
 
             <Tabs.Item title="Raspberries">
-              <div className="grid grid-cols-4 gap-y-4 gap-x-2">
+            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-2">
                 {apricots?.map((i) => (
                   <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                    <img src={i.image} alt="" />
+                    <img className="h-48 w-full" src={i.image} alt="" />
                     <div className="p-3">
                       <h2 className="text-center text-2xl font-semibold">
                         {i.title}
@@ -352,10 +352,10 @@ export function HomePage() {
             </Tabs.Item>
 
             <Tabs.Item title="Raspberries">
-              <div className="grid grid-cols-4 gap-y-4 gap-x-2">
+            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-2">
                 {raspberries?.map((i) => (
                   <div className="border-2 border-rose-600 rounded-md overflow-hidden">
-                    <img src={i.image} alt="" />
+                    <img className="h-48 w-full" src={i.image} alt="" />
                     <div className="p-3">
                       <h2 className="text-center text-2xl font-semibold">
                         {i.title}
@@ -379,8 +379,8 @@ export function HomePage() {
         </div>
 
         {/* food items  */}
-        <div className="my-32 grid grid-cols-3 gap-3">
-          <div className="border-2 border-rose-600 rounded relative">
+        <div className="my-32 grid md:grid-cols-3 gap-3">
+          <div className="border-2 border-rose-600 rounded relative mb-10">
             <img
               src="https://themewagon.github.io/fruitables/img/featur-1.jpg"
               alt=""
@@ -394,7 +394,7 @@ export function HomePage() {
               </div>
             </div>
           </div>
-          <div className="border-2 border-rose-600 rounded relative">
+          <div className="border-2 border-rose-600 rounded relative mb-10">
             <img
               src="https://themewagon.github.io/fruitables/img/featur-1.jpg"
               alt=""
@@ -408,7 +408,7 @@ export function HomePage() {
               </div>
             </div>
           </div>
-          <div className="border-2 border-rose-600 rounded relative">
+          <div className="border-2 border-rose-600 rounded relative mb-10">
             <img
               src="https://themewagon.github.io/fruitables/img/featur-1.jpg"
               alt=""
@@ -425,7 +425,7 @@ export function HomePage() {
         </div>
 
         <div className="my-20">
-          <div className="w-6/12 mx-auto text-center">
+          <div className="md:w-6/12 w-10/12 mx-auto text-center">
             <h2 className="text-4xl font-semibold mb-2">Bestseller Products</h2>
             <p>
               Latin words, combined with a handful of model sentence structures,
@@ -433,7 +433,7 @@ export function HomePage() {
             </p>
           </div>
 
-          <div className="my-10 grid grid-cols-4 gap-3">
+          <div className="my-10 grid grid-cols-2 md:grid-cols-4 gap-3">
             {rating?.map((e) => (
               <div>
                 <img className="rounded-lg mb-4" src={e.image} alt="" />

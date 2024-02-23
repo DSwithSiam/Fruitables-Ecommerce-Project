@@ -74,7 +74,7 @@ export function Shop() {
                 <CiSearch className="text-xl" />
               </button>
             </form>
-            <div className="flex items-center gap-2 bg-gray-200 py-1 px-3 rounded-md">
+            <div className="sm:flex hidden items-center gap-2 bg-gray-200 py-1 px-3 rounded-md">
               <p>Default Sorting:</p>
               <select className="border-0 rounded-full" name="" id="">
                 <option value="nothing">Nothing</option>
@@ -85,32 +85,32 @@ export function Shop() {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 my-10">
+        <div className="sm:grid grid-cols-4 gap-4 my-10">
           <div className="col-span-1">
             <div>
               <h2 className="text-2xl mb-3">Categories</h2>
               <ul>
                 <li
                   onClick={() => handleFiltaring("banana")}
-                  className="my-3 cursor-pointer text-rose-600 underline flex justify-between"
+                  className="bg-gray-100 text-center block p-2 rounded my-1 cursor-pointer text-rose-600"
                 >
                   Banana <span className="text-gray-500"></span>
                 </li>
                 <li
                   onClick={() => handleFiltaring("apricots")}
-                  className="my-3 cursor-pointer text-rose-600 underline flex justify-between"
+                  className="bg-gray-100 text-center block p-2 rounded my-1 cursor-pointer text-rose-600"
                 >
                   Apples <span className="text-gray-500"></span>
                 </li>
                 <li
                   onClick={() => handleFiltaring("oranges")}
-                  className="my-3 cursor-pointer text-rose-600 underline flex justify-between"
+                  className="bg-gray-100 text-center block p-2 rounded my-1 cursor-pointer text-rose-600"
                 >
                   Oranges <span className="text-gray-500"></span>
                 </li>
                 <li
                   onClick={() => handleFiltaring("raspberries")}
-                  className="my-3 cursor-pointer text-rose-600 underline flex justify-between"
+                  className="bg-gray-100 text-center block p-2 rounded my-1 cursor-pointer text-rose-600"
                 >
                   Raspberries <span className="text-gray-500"></span>
                 </li>
@@ -118,10 +118,10 @@ export function Shop() {
             </div>
           </div>
           <div className="col-span-3">
-            <div className="grid grid-cols-3 gap-y-4 gap-x-2">
+            <div className="grid md:grid-cols-3 sm:grid-cols-2  gap-y-4 gap-x-2">
               {alldata?.map((i) => (
                 <div className="bg-gray-50 rounded-md overflow-hidden">
-                  <img src={i.image} alt="" />
+                  <img className="h-48 w-full" src={i.image} alt="" />
                   <div className="p-3">
                     <h2 className="text-center text-2xl font-semibold">
                       {i.title}

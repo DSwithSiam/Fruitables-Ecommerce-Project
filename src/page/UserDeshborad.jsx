@@ -1,5 +1,6 @@
 import { Button } from "flowbite-react";
 import { Table } from 'flowbite-react';
+import { useEffect, useState } from "react";
 
 
 export function UserDeshborad() {
@@ -7,6 +8,19 @@ export function UserDeshborad() {
     const maindate = date.getMonth();
     const getFullYear = date.getFullYear();
     const getDate = date.getDate();
+
+    const [profile , setProfile] = useState([])
+    const userId = localStorage.getItem('user_id')
+ 
+    useEffect(()=>{
+      fetch(`https://fruitables-api.onrender.com/user/data/${userId}`)
+      .then(res => res.json())
+      .then(data => setProfile(data))
+    },[])
+
+    const fullname = profile.first_name + ' '+ profile.last_name;
+  
+
 
   return (
     <>
@@ -22,8 +36,8 @@ export function UserDeshborad() {
                 src="https://img.icons8.com/?size=256&id=kDoeg22e5jUY&format=png"
                 alt=""
               />
-              <h2 className="font-semibold text-center text-xl">Your Name</h2>
-              <h3 className="font-semibold text-center">Address</h3>
+              <h2 className="font-semibold text-center text-xl">{profile? fullname : ''}</h2>
+              <h3 className="font-semibold text-center">{profile? profile.email : ''}</h3>
             </div>
             <div className="col-span-2 bg-white p-5 rounded">
               <label className="block mb-2" htmlFor="">
@@ -32,7 +46,7 @@ export function UserDeshborad() {
                   className="border-gray-100 rounded"
                   type="text"
                   name=""
-                  defaultValue={"Nimur Rahman"}
+                  defaultValue={profile? profile.first_name : ''}
                   id=""
                 />
               </label>
@@ -42,7 +56,7 @@ export function UserDeshborad() {
                   className="border-gray-100 rounded"
                   type="text"
                   name=""
-                  defaultValue={"Nerob"}
+                  defaultValue={profile? profile.last_name : ''}
                   id=""
                 />
               </label>
@@ -52,7 +66,7 @@ export function UserDeshborad() {
                   className="border-gray-100 rounded"
                   type="text"
                   name=""
-                  defaultValue={"nimurnerob404@gmail.com"}
+                  defaultValue={profile? profile.email : ''}
                   id=""
                 />
               </label>
@@ -62,7 +76,7 @@ export function UserDeshborad() {
                   className="border-gray-100 rounded"
                   type="text"
                   name=""
-                  defaultValue={"+88 01708784404"}
+                  defaultValue={"+88 01xxxxxxxx"}
                   id=""
                 />
               </label>

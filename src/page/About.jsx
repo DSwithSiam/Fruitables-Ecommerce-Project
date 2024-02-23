@@ -2,7 +2,7 @@ export function About() {
   return (
     <>
       <div className="w-10/12 mx-auto my-20 ">
-        <div className="grid grid-cols-2 gap-4 my-20">
+        <div className="md:grid grid-cols-2 gap-4 my-20">
           <div>
             <h3 className="text-xl font-semibold text-rose-500">
               Why we are Best ?
@@ -24,7 +24,7 @@ export function About() {
             />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4 my-20">
+        <div className="md:grid grid-cols-2 gap-4 my-20">
           <div>
             <img
               src="../../public/png-transparent-fruit-graphy-honeydew-miscellaneous-natural-foods-food-removebg-preview.png"
